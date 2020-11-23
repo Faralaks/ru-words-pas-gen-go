@@ -1,8 +1,7 @@
-package main
+package ru_words_pas_gen_go
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"time"
@@ -28,6 +27,7 @@ func init() {
 	Words = *wordBase["words"]
 	WordsLength = len(Words)
 	ShufflePerion = time.Hour
+	rand.Seed(time.Now().UnixNano())
 	go Shuffle()
 }
 
@@ -37,15 +37,14 @@ func Shuffle() {
 		rand.Shuffle(WordsLength, func(i, j int) {
 			Words[i], Words[j] = Words[j], Words[i]
 		})
-		fmt.Printf("\n%v", WordsLength)
 		time.Sleep(ShufflePerion)
-
 	}
-
 }
 
-func main() {
-	//fmt.Printf("\n%v", Words)
-	fmt.Printf("\n")
-	time.Sleep(time.Minute)
+func GeneratePas(minLength int, separator string) string {
+	var pas string
+	for pas = ""; len(pas) < minLength; {
+		pas += separator + Words[rand.Intn(WordsLength)]
+	}
+	return pas[1:]
 }
